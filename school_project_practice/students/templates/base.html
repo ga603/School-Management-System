@@ -9,35 +9,38 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #040474;">
         <div class="container">
-            <a class="navbar-brand" href="#">StudentMS</a>
+            <a class="navbar-brand" href="#">Kinari Primary Portal</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+<ul class="navbar-nav ms-auto">
     <li class="nav-item">
-        <a class="nav-link active" href="{% url 'home' %}">Home</a>
+        <a class="nav-link" href="{% url 'home' %}">Home</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{% url 'student_list' %}">All Students</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
-    </li>
 
     {% if user.is_authenticated %}
         <li class="nav-item">
-            <a class="nav-link fw-bold text-warning" href="#">Hi, {{ user.username }}</a>
+            <a class="nav-link fw-bold" href="{% url 'add_student' %}">Add Student</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'contact' %}">Contact Us</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link text-warning" href="#">Hi, {{ user.username }}</a>
         </li>
         <li class="nav-item">
             <a class="nav-link btn btn-danger text-white ms-2" href="{% url 'logout' %}">Logout</a>
         </li>
+
     {% else %}
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'register' %}">Register</a>
-        </li>
         <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}">Login</a>
         </li>
