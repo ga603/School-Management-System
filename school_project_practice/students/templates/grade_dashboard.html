@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-5">Select a Class</h2>
+
+    <div class="row">
+        {% for grade in grades %}
+        <div class="col-md-4 mb-4">
+            <div class="card text-center shadow-sm h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h4 class="card-title">{{ grade }}</h4>
+                    <p class="card-text text-muted">Manage students, attendance, and results.</p>
+                    <a href="{% url 'view_grade_students' grade %}" class="btn btn-primary">Enter Class</a>
+                    <a href="{% url 'mark_attendance' grade %}" class="btn btn-outline-success mt-2">Mark Attendance</a>
+                    <a href="{% url 'grade_resources' grade %}" class="btn btn-outline-info mt-2">Assignments</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

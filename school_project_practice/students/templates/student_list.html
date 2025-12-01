@@ -44,7 +44,13 @@
                         <td>{{ student.grade_class }}</td>
                         <td>{{ student.parent_contact }}</td>
                         <td>
-                            <a href="{% url 'edit_student' student.id %}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{% url 'add_result' student.id %}" class="btn btn-sm btn-info text-white" title="Add Marks">
+    <i class="fas fa-plus"></i> Marks
+</a>
+                       
+
+                        <a href="{% url 'student_report' student.id %}" class="btn btn-sm btn-success" title="View Report">Report</a>
+                        <a href="{% url 'edit_student' student.id %}" class="btn btn-sm btn-warning">Edit</a>
 
 <a href="{% url 'delete_student' student.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</a>
         </td>

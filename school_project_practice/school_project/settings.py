@@ -25,8 +25,7 @@ SECRET_KEY = 'django-insecure-^21%-2)a18)#g7no77_(2v7kz!z%^6yam$)2em@lf)09htnrnj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['kinariportal.pythonanywhere.com']
-
+ALLOWED_HOSTS = ['kinariportal.pythonanywhere.com', '127.0.0.1', 'localhost']
 
 # Application definition
 

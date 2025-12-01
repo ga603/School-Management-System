@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="col-md-6 mx-auto">
+        <div class="card shadow-lg border-success">
+            <div class="card-header bg-success text-white text-center">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/M-PESA_LOGO-01.svg/1200px-M-PESA_LOGO-01.svg.png" width="150" class="mb-2 bg-white p-2 rounded">
+                <h3>Pay School Fees</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-center">Enter your M-Pesa number below. You will receive a popup on your phone to complete the payment.</p>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Phone Number</label>
+                        <input type="tel" name="phone" class="form-control form-control-lg" placeholder="07..." required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Amount (KES)</label>
+                        <input type="number" name="amount" class="form-control" value="1" readonly>
+                        <small class="text-muted">Testing with 1 KES for now.</small>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg">Pay Now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

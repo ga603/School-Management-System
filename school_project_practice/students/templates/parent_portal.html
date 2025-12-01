@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-success text-white text-center">
+            <h2>Parent/Student Portal</h2>
+            <p>Enter Admission Number to access Assignments & Results</p>
+        </div>
+        <div class="card-body text-center">
+            <form method="GET" class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="input-group mb-3">
+                        <input type="text" name="admission_number" class="form-control form-control-lg" placeholder="e.g. 1021" required>
+                        <button class="btn btn-dark btn-lg" type="submit">Access Portal</button>
+                    </div>
+                </div>
+            </form>
+
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if student %}
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card shadow h-100">
+                <div class="card-body text-center">
+                    {% if student.passport_photo %}
+                        <img src="{{ student.passport_photo.url }}" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                    {% endif %}
+                    <h4>{{ student.first_name }} {{ student.last_name }}</h4>
+                    <p class="badge bg-primary fs-6">{{ student.grade_class }}</p>
+                    <hr>
+                    <p><strong>Adm No:</strong> {{ student.admission_number }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5>📚 Assignments & Notes</h5>
+                </div>
+                <div class="card-body">
+                    {% if assignments %}
+                        <ul class="list-group">
+                            {% for resource in assignments %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>{{ resource.title }}</strong>
+                                    <br><small class="text-muted">{{ resource.uploaded_at|date:"M d, Y" }}</small>
+                                </div>
+                                <a href="{{ resource.file.url }}" class="btn btn-sm btn-outline-primary" download>Download</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No assignments uploaded for this class yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-header bg-warning text-dark">
+                    <h5>🏆 Assessment Results</h5>
+                </div>
+                <div class="card-body">
+                    {% if results %}
+                        <table class="table table-bordered table-sm">
+                            <thead>
+                                <tr><th>Subject</th><th>Level</th><th>Grade</th></tr>
+                            </thead>
+                            <tbody>
+                                {% for res in results %}
+                                <tr>
+                                    <td>{{ res.subject }}</td>
+                                    <td>{{ res.performance_level }}</td>
+                                    <td>{{ res.short_grade }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <p class="text-muted">No results found.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Mark Attendance: {{ grade_name }}</h2>
+    <div class="text-center mb-4">
+    <a href="{% url 'export_attendance' grade_name %}" class="btn btn-outline-dark">
+        <i class="fas fa-download"></i> Download Attendance Report
+    </a>
+</div>
+    
+    <div class="card shadow">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="row mb-4">
+                    <div class="col-md-4 mx-auto">
+                        <label class="form-label fw-bold">Select Date:</label>
+                        <input type="date" name="date" class="form-control" value="{{ today }}" required>
+                    </div>
+                </div>
+
+                <table class="table table-bordered">
+                    <thead class="table-primary">
+                        <tr>
+                            <th>Student Name</th>
+                            <th class="text-center">Present</th>
+                            <th class="text-center">Absent</th>
+                            <th class="text-center">Late</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td class="fw-bold">{{ student.first_name }} {{ student.last_name }}</td>
+                            
+                            <td class="text-center">
+                                <input type="radio" name="status_{{ student.id }}" value="Present" checked class="form-check-input bg-success border-success">
+                            </td>
+                            <td class="text-center">
+                                <input type="radio" name="status_{{ student.id }}" value="Absent" class="form-check-input bg-danger border-danger">
+                            </td>
+                            <td class="text-center">
+                                <input type="radio" name="status_{{ student.id }}" value="Late" class="form-check-input bg-warning border-warning">
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" class="text-center">No students in this class.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Save Attendance Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

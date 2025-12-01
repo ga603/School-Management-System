@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="col-md-6 mx-auto">
+        <div class="card shadow border-dark">
+            <div class="card-header bg-dark text-white text-center">
+                <h3><i class="fas fa-sms"></i> Send Parent Communication</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Select Target Grade</label>
+                        <select name="grade" class="form-select" required>
+                            <option value="" selected disabled>Choose a Grade...</option>
+                            {% for grade in grades %}
+                                <option value="{{ grade }}">{{ grade }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Message Content</label>
+                        <textarea name="message" class="form-control" rows="4" placeholder="Dear Parent, please note that..." required></textarea>
+                        <small class="text-muted">Keep it short and clear.</small>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-paper-plane"></i> Send Blast SMS
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card mt-5 shadow">
+            <div class="card-header bg-info text-white text-center">
+                <h3>Enter Marks</h3>
+                <p class="mb-0">Student: <strong>{{ student.first_name }} {{ student.last_name }}</strong></p>
+                <p class="small mb-0">Adm: {{ student.admission_number }}</p>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Select Exam</label>
+                        {{ form.exam }} </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Select Subject</label>
+                        {{ form.subject }} </div>
+                    <div class="mb-3">
+    <label class="form-label fw-bold">Performance Level (1-7)</label>
+    {{ form.performance_level }}
+    <small class="text-muted">Select based on KNEC CBC Guidelines.</small>
+                     </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-info text-white">Save Result</button>
+                        <a href="{% url 'student_list' %}" class="btn btn-secondary">Back to List</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var inputs = document.querySelectorAll('select, input');
+    inputs.forEach(function(input) {
+        input.classList.add('form-control');
+    });
+</script>
+{% endblock %}
