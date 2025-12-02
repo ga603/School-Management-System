@@ -1,14 +1,17 @@
-from django.contrib import admin
+from django.contrib import admin  # <--- Import must come first
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+# --- REBRANDING GOES HERE (After imports) ---
+admin.site.site_header = "ElimuTrack Admin"
+admin.site.site_title = "ElimuTrack Portal"
+admin.site.index_title = "Welcome to ElimuTrack"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # This line points to the file we just fixed in Step 1
-    path('', include('students.urls')), 
+    path('', include('students.urls')),
 ]
 
-# Image Configuration
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
