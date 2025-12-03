@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5 text-center">
+    <div class="card border-danger shadow">
+        <div class="card-header bg-danger text-white">
+            <h3>⚠️ End of Year Promotion</h3>
+        </div>
+        <div class="card-body">
+            <h4>Are you sure you want to promote ALL students?</h4>
+            <p>This will move Grade 1 to Grade 2, Grade 2 to Grade 3, etc.</p>
+            <p class="text-danger fw-bold">This action cannot be undone easily.</p>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-lg">Yes, Promote Everyone</button>
+                <a href="{% url 'grade_dashboard' %}" class="btn btn-secondary btn-lg">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

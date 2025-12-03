@@ -13,11 +13,17 @@
                 
                 <form method="POST">
                     {% csrf_token %}
+                    
                     <div class="mb-3">
                         <label class="form-label fw-bold">Phone Number</label>
                         <input type="tel" name="phone" class="form-control form-control-lg" placeholder="07..." required>
                     </div>
-                    
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Student Admission Number</label>
+                        <input type="text" name="admission_number" class="form-control" placeholder="e.g. 1021" required>
+                    </div>
+    
                     <div class="mb-3">
                         <label class="form-label fw-bold">Amount (KES)</label>
                         <input type="number" name="amount" class="form-control" value="1" readonly>
@@ -27,8 +33,7 @@
                     <div class="d-grid">
                         <button type="submit" class="btn btn-success btn-lg">Pay Now</button>
                     </div>
-                </form>
-            </div>
+                </form> </div>
         </div>
     </div>
 </div>

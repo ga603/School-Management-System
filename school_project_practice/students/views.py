@@ -271,22 +271,56 @@ def send_sms(request):
         return redirect('send_sms')
 
     return render(request, 'send_sms.html', {'grades': grades})
-@login_required
+
 def pay_fees(request):
     if request.method == 'POST':
+        adm_no = request.POST.get('admission_number')
         phone = request.POST.get('phone')
-        amount = 1 # Keep it 1 KES for testing
-        
-        # Trigger the STK Push
-        response = lipa_na_mpesa(phone, amount)
-        
-        # Check if Safaricom accepted the request
-        if response.get('ResponseCode') == '0':
-            messages.success(request, f"STK Push sent to {phone}. Check your phone to enter PIN.")
-        else:
-            error_message = response.get('errorMessage', 'Unknown error')
-            messages.error(request, f"Failed: {error_message}")
+        amount = 1 # Keep 1 KES for testing
+
+        try:
+            # 1. Verify the Student exists
+            student = Student.objects.get(admission_number=adm_no)
+            
+            # 2. Trigger M-Pesa
+            response = lipa_na_mpesa(phone, amount, account_ref=f"Fee-{adm_no}")
+            
+            # 3. Check M-Pesa Response
+            if response.get('ResponseCode') == '0':
+                messages.success(request, f"Payment initiated for {student.first_name}. Check phone to enter PIN!")
+            else:
+                error_message = response.get('errorMessage', 'Unknown error')
+                messages.error(request, f"Payment failed: {error_message}")
+                
+        except Student.DoesNotExist:
+            messages.error(request, f"Student with Admission Number {adm_no} not found.")
             
         return redirect('pay_fees')
         
     return render(request, 'pay_fees.html')
+
+@login_required
+def promote_students(request):
+    if request.method == 'POST':
+        # Logic: Grade 1 -> Grade 2, etc.
+        grade_order = ['Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9']
+        
+        count = 0
+        # We go backwards (Grade 8 -> 9) so we don't double-promote someone
+        for i in range(len(grade_order) - 2, -1, -1): 
+            current_grade = grade_order[i]
+            next_grade = grade_order[i+1]
+            
+            # Find students in current grade and move them
+            students = Student.objects.filter(grade_class=current_grade)
+            for s in students:
+                s.grade_class = next_grade
+                s.save()
+                count += 1
+                
+        # Handle Grade 9 (Graduating?) - Optional logic here
+        
+        messages.success(request, f"Successfully promoted {count} students to the next grade!")
+        return redirect('grade_dashboard')
+
+    return render(request, 'promote_confirm.html')

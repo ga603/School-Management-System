@@ -1,25 +1,47 @@
+{% extends 'base.html' %}
+
 {% block content %}
-    <div class="jumbotron text-center mt-5">
-        <h1 class="display-4 fw-bold">Welcome to ElimuTrack</h1>
-        <p class="lead">Kinari Primary School Management System</p>
-        <hr class="my-4">
+<div class="p-5 mb-4 bg-white rounded-3 shadow-sm text-center">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold text-primary">Welcome to ElimuTrack</h1>
+        <p class="col-md-8 fs-4 mx-auto text-muted">
+            The Official Digital Management Portal for Kinari Primary School.
+        </p>
+        <hr class="my-4" style="width: 50%; margin: 0 auto;">
         
-        <div class="d-grid gap-3 col-md-6 mx-auto">
+        <div class="row justify-content-center gap-3 mt-4">
             {% if user.is_authenticated %}
-                <p>Hello, {{ user.username }}! You are logged in.</p>
-                <a class="btn btn-primary btn-lg" href="{% url 'grade_dashboard' %}" role="button">
-                    <i class="fas fa-chalkboard-teacher"></i> Go to Staff Dashboard
-                </a>
-            
+                <div class="col-md-5">
+                    <div class="card h-100 border-primary">
+                        <div class="card-body">
+                            <h3><i class="fas fa-chalkboard-teacher"></i> Staff Dashboard</h3>
+                            <p>Manage students, mark attendance, and enter exam results.</p>
+                            <a href="{% url 'grade_dashboard' %}" class="btn btn-primary btn-lg w-100">Go to Dashboard</a>
+                        </div>
+                    </div>
+                </div>
             {% else %}
-                <p>Are you a Parent or Student? Check results and assignments here.</p>
-                <a class="btn btn-success btn-lg" href="{% url 'parent_portal' %}" role="button">
-                    <i class="fas fa-user-graduate"></i> Parent/Student Portal
-                </a>
+                <div class="col-md-5">
+                    <div class="card h-100 border-success">
+                        <div class="card-body">
+                            <h3><i class="fas fa-user-graduate"></i> Parent/Student Portal</h3>
+                            <p>Check assignments, exam results, and report cards.</p>
+                            <a href="{% url 'parent_portal' %}" class="btn btn-success btn-lg w-100">Access Portal</a>
+                        </div>
+                    </div>
+                </div>
                 
-                <p class="mt-3 text-muted">Are you a Teacher?</p>
-                <a class="btn btn-outline-primary" href="{% url 'login' %}" role="button">Staff Login</a>
+                <div class="col-md-5">
+                    <div class="card h-100 border-secondary">
+                        <div class="card-body">
+                            <h3><i class="fas fa-lock"></i> Staff Login</h3>
+                            <p>Restricted access for Teachers and Administration.</p>
+                            <a href="{% url 'login' %}" class="btn btn-outline-dark btn-lg w-100">Login</a>
+                        </div>
+                    </div>
+                </div>
             {% endif %}
         </div>
     </div>
+</div>
 {% endblock %}

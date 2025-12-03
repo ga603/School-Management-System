@@ -10,21 +10,24 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+"""
+Django settings for school_project project.
+"""
+
 from pathlib import Path
+import os # Imported for safety
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-^21%-2)a18)#g7no77_(2v7kz!z%^6yam$)2em@lf)09htnrnj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Allowed Hosts for both Live and Local
 ALLOWED_HOSTS = ['kinariportal.pythonanywhere.com', '127.0.0.1', 'localhost', 'elimutrack.pythonanywhere.com']
 
 # Application definition
@@ -36,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "students",
+    'students', # Your Custom App
 ]
 
 MIDDLEWARE = [
@@ -70,8 +73,6 @@ WSGI_APPLICATION = 'school_project.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -81,8 +82,6 @@ DATABASES = {
 
 
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -100,8 +99,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -111,17 +108,18 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
+# --- STATIC & MEDIA FILES CONFIGURATION ---
 
 STATIC_URL = 'static/'
+
+# This points to the folder where we moved your CSS/Images (inside school_project)
+STATICFILES_DIRS = [
+    BASE_DIR / "school_project" / "static",
+]
+
+# This is where files go when we run 'collectstatic' on the server
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Media Files (User Uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-LOGIN_URL = 'login'

@@ -35,4 +35,5 @@ urlpatterns = [
     path('portal/', views.parent_portal, name='parent_portal'),
     path('sms/', views.send_sms, name='send_sms'),
     path('pay/', views.pay_fees, name='pay_fees'),
+    path('promote/', views.promote_students, name='promote_students'),
 ]

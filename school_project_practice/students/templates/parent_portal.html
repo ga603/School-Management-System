@@ -26,7 +26,7 @@
     {% if student %}
     <div class="row mt-4">
         <div class="col-md-4">
-            <div class="card shadow h-100">
+            <div class="card shadow mb-4">
                 <div class="card-body text-center">
                     {% if student.passport_photo %}
                         <img src="{{ student.passport_photo.url }}" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
@@ -35,6 +35,18 @@
                     <p class="badge bg-primary fs-6">{{ student.grade_class }}</p>
                     <hr>
                     <p><strong>Adm No:</strong> {{ student.admission_number }}</p>
+                </div>
+            </div>
+
+            <div class="card shadow border-success">
+                <div class="card-header bg-success text-white text-center">
+                    <h5 class="mb-0"><i class="fas fa-mobile-alt"></i> Pay School Fees</h5>
+                </div>
+                <div class="card-body text-center">
+                    <p>Pay fees instantly via M-Pesa.</p>
+                    <a href="{% url 'pay_fees' %}" class="btn btn-success w-100">
+                        Pay Now <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
