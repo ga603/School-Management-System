@@ -13,6 +13,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('students.urls')),
     path('about/',views.about, name='about'),
+    path('resource/delete/<int:id>/', views.delete_resource, name='delete_resource'),
+    path('result/delete/<int:id>/', views.delete_result, name='delete_result'),
+    path('grade/<str:grade_name>/print/', views.bulk_grade_report, name='bulk_grade_report'),
 ]
 
 if settings.DEBUG:

@@ -67,11 +67,11 @@
                             <tr>
                                 <td>
                                     {% if resource.resource_type == 'Video' %}
-                                        <span class="badge bg-danger"><i class="fas fa-video"></i> Video</span>
+                                        <span class="badge bg-danger">Video</span>
                                     {% elif resource.resource_type == 'Newsletter' %}
-                                        <span class="badge bg-warning text-dark"><i class="fas fa-newspaper"></i> News</span>
+                                        <span class="badge bg-warning text-dark">News</span>
                                     {% else %}
-                                        <span class="badge bg-primary"><i class="fas fa-file-alt"></i> Notes</span>
+                                        <span class="badge bg-primary">Notes</span>
                                     {% endif %}
                                 </td>
                                 <td>{{ resource.title }}</td>
@@ -81,9 +81,11 @@
                                     {% elif resource.video_link %}
                                         <a href="{{ resource.video_link }}" class="btn btn-sm btn-outline-danger" target="_blank">Watch</a>
                                     {% endif %}
+                                    
+                                    <a href="{% url 'delete_resource' resource.id %}" class="btn btn-sm btn-danger ms-2" onclick="return confirm('Are you sure you want to delete this file?');">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
                                 </td>
-                                <td>{{ resource.uploaded_at|date:"M d" }}</td>
-                            </tr>
                             {% empty %}
                             <tr>
                                 <td colspan="4" class="text-center py-4 text-muted">No resources uploaded yet.</td>

@@ -349,3 +349,34 @@ def promote_students(request):
         return redirect('grade_dashboard')
 
     return render(request, 'promote_confirm.html')
+# --- 1. DELETE RESOURCE ---
+@login_required
+def delete_resource(request, id):
+    resource = get_object_or_404(LearningResource, pk=id)
+    grade = resource.grade_class
+    resource.delete()
+    messages.success(request, "Resource deleted successfully!")
+    return redirect('grade_resources', grade_name=grade)
+
+# --- 2. DELETE RESULT ---
+@login_required
+def delete_result(request, id):
+    result = get_object_or_404(StudentResult, pk=id)
+    student_id = result.student.id
+    result.delete()
+    messages.success(request, "Result deleted successfully!")
+    return redirect('add_result', student_id=student_id)
+
+# --- 3. BULK PRINT REPORTS (For Whole Class) ---
+@login_required
+def bulk_grade_report(request, grade_name):
+    students = Student.objects.filter(grade_class=grade_name).order_by('admission_number')
+    
+    # We attach the results to each student object manually for the template
+    for student in students:
+        student.cached_results = StudentResult.objects.filter(student=student).order_by('exam_name', 'subject')
+        
+    return render(request, 'bulk_report.html', {
+        'students': students, 
+        'grade_name': grade_name
+    })

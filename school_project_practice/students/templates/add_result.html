@@ -54,7 +54,12 @@
                             <strong>{{ result.subject }}</strong> 
                             <small class="text-muted">({{ result.exam_type }} - {{ result.exam_name }})</small>
                         </div>
-                        <span class="badge bg-success rounded-pill">Level {{ result.performance_level }}</span>
+                        <div>
+                            <span class="badge bg-success rounded-pill me-2">Level {{ result.performance_level }}</span>
+                            <a href="{% url 'delete_result' result.id %}" class="text-danger" title="Delete this mark" onclick="return confirm('Delete this result?');">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                        </div>
                     </li>
                 {% empty %}
                     <li class="list-group-item text-muted">No marks entered yet.</li>
