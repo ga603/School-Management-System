@@ -1,47 +1,76 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="p-5 mb-4 bg-white rounded-3 shadow-sm text-center">
-    <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold text-primary">Welcome to ElimuTrack</h1>
-        <p class="col-md-8 fs-4 mx-auto text-muted">
-            The Official Digital Management Portal for Kinari Primary School.
-        </p>
-        <hr class="my-4" style="width: 50%; margin: 0 auto;">
-        
-        <div class="row justify-content-center gap-3 mt-4">
-            {% if user.is_authenticated %}
-                <div class="col-md-5">
-                    <div class="card h-100 border-primary">
-                        <div class="card-body">
-                            <h3><i class="fas fa-chalkboard-teacher"></i> Staff Dashboard</h3>
-                            <p>Manage students, mark attendance, and enter exam results.</p>
-                            <a href="{% url 'grade_dashboard' %}" class="btn btn-primary btn-lg w-100">Go to Dashboard</a>
-                        </div>
+<div class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 fw-bold mb-3">Welcome to ElimuTrack</h1>
+        <p class="lead mb-4">The Official Digital Management Portal for Kinari Primary School.</p>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'parent_portal' %}" class="btn btn-warning btn-lg fw-bold px-4 rounded-pill">Parent Portal <i class="fas fa-arrow-right"></i></a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row justify-content-center gap-4">
+        {% if user.is_authenticated %}
+            <div class="col-md-5">
+                <div class="card hover-card h-100 shadow-sm">
+                    <div class="card-body text-center p-5">
+                        <i class="fas fa-chalkboard-teacher fa-4x text-primary mb-3"></i>
+                        <h3 class="fw-bold text-primary">Staff Dashboard</h3>
+                        <p class="text-muted">Manage classes, attendance, and exam results.</p>
+                        <a href="{% url 'grade_dashboard' %}" class="btn btn-primary w-100 rounded-pill mt-3">Enter Dashboard</a>
                     </div>
                 </div>
-            {% else %}
-                <div class="col-md-5">
-                    <div class="card h-100 border-success">
-                        <div class="card-body">
-                            <h3><i class="fas fa-user-graduate"></i> Parent/Student Portal</h3>
-                            <p>Check assignments, exam results, and report cards.</p>
-                            <a href="{% url 'parent_portal' %}" class="btn btn-success btn-lg w-100">Access Portal</a>
-                        </div>
+            </div>
+            
+            <div class="col-md-5">
+                <div class="card hover-card h-100 shadow-sm">
+                    <div class="card-body text-center p-5">
+                        <i class="fas fa-mobile-alt fa-4x text-success mb-3"></i>
+                        <h3 class="fw-bold text-success">Communications</h3>
+                        <p class="text-muted">Send SMS blasts to parents instantly.</p>
+                        <a href="{% url 'send_sms' %}" class="btn btn-outline-success w-100 rounded-pill mt-3">Send SMS</a>
                     </div>
                 </div>
-                
-                <div class="col-md-5">
-                    <div class="card h-100 border-secondary">
-                        <div class="card-body">
-                            <h3><i class="fas fa-lock"></i> Staff Login</h3>
-                            <p>Restricted access for Teachers and Administration.</p>
-                            <a href="{% url 'login' %}" class="btn btn-outline-dark btn-lg w-100">Login</a>
-                        </div>
+            </div>
+
+        {% else %}
+            <div class="col-md-3">
+                <div class="card hover-card h-100 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-user-graduate fa-3x text-success mb-3"></i>
+                        <h4 class="fw-bold">Parent Portal</h4>
+                        <p class="small text-muted">Check results & pay fees.</p>
+                        <a href="{% url 'parent_portal' %}" class="btn btn-success btn-sm w-100 rounded-pill">Access Now</a>
                     </div>
                 </div>
-            {% endif %}
-        </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card hover-card h-100 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-info-circle fa-3x text-info mb-3"></i>
+                        <h4 class="fw-bold">About Us</h4>
+                        <p class="small text-muted">Learn about our history.</p>
+                        <a href="{% url 'about' %}" class="btn btn-info text-white btn-sm w-100 rounded-pill">Learn More</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card hover-card h-100 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <i class="fas fa-lock fa-3x text-secondary mb-3"></i>
+                        <h4 class="fw-bold">Staff Login</h4>
+                        <p class="small text-muted">Authorized access only.</p>
+                        <a href="{% url 'login' %}" class="btn btn-dark btn-sm w-100 rounded-pill">Login</a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

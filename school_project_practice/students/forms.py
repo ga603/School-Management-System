@@ -1,30 +1,36 @@
 from django import forms
-from .models import Student, LearningResource, StudentResult
+from .models import Student, LearningResource, StudentResult, ReportComment
 
-# Form for Adding a New Student
+# --- STUDENT FORM (Removed 'email') ---
 class StudentForm(forms.ModelForm):
     class Meta:
         model = Student
-        fields = ['admission_number', 'first_name', 'last_name', 'grade_class', 'parent_contact', 'email', 'passport_photo']
+        fields = ['first_name', 'last_name', 'admission_number', 'grade_class', 'parent_contact', 'passport_photo']
 
-# Form for Editing an Existing Student
-# We update the model to 'Student' and remove 'username'
-class StudentUpdateForm(forms.ModelForm):
-    class Meta:
-        model = Student
-        fields = ['admission_number', 'first_name', 'last_name', 'grade_class', 'parent_contact', 'email', 'passport_photo']
-
-# Form for Uploading Assignments
+# --- RESOURCE FORM (For Assignments/Videos) ---
 class ResourceForm(forms.ModelForm):
     class Meta:
         model = LearningResource
-        fields = ['title', 'file',]
+        fields = ['title', 'resource_type', 'file', 'video_link']
+        widgets = {
+            'video_link': forms.URLInput(attrs={'placeholder': 'https://youtube.com/...'}),
+        }
+
+# --- RESULT FORM (For Marks) ---
 class ResultForm(forms.ModelForm):
     class Meta:
         model = StudentResult
-        # Changed 'score' to 'performance_level'
-        fields = ['exam', 'subject', 'performance_level'] 
+        fields = ['subject', 'exam_type', 'exam_name', 'performance_level']
         widgets = {
-            # This makes it a nice dropdown menu
-            'performance_level': forms.Select(attrs={'class': 'form-select'}),
+            'exam_name': forms.TextInput(attrs={'placeholder': 'e.g. Term 1 2025'}),
+        }
+
+# --- COMMENT FORM (For Teachers) ---
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = ReportComment
+        fields = ['exam_name', 'teacher_comment']
+        widgets = {
+            'teacher_comment': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Class Teacher Remarks...'}),
+            'exam_name': forms.TextInput(attrs={'placeholder': 'e.g. Term 1 2025'}),
         }

@@ -11,14 +11,17 @@ from django.http import HttpResponse
 from .mpesa import lipa_na_mpesa
 
 # Import Models
-from .models import Student, ContactMessage, Attendance, LearningResource, StudentResult
+from .models import Student, ContactMessage, Attendance, LearningResource, StudentResult, ReportComment
 
-# Import Forms
-from .forms import StudentForm, StudentUpdateForm, ResourceForm, ResultForm
+# Import Formspython manage.py makemigrations
+from .forms import StudentForm, ResourceForm, ResultForm, CommentForm
 
 # --- HOME PAGE ---
 def home(request):
     return render(request, 'home.html')
+
+def about(request):
+    return render(request, 'about.html')
 
 # --- AUTHENTICATION (Login/Logout) ---
 def login_view(request):
@@ -192,7 +195,7 @@ def add_result(request, student_id):
 @login_required
 def student_report(request, student_id):
     student = get_object_or_404(Student, pk=student_id)
-    results = StudentResult.objects.filter(student=student).order_by('exam', 'subject')
+    results = StudentResult.objects.filter(student=student).order_by('exam_name', 'subject')
     
     return render(request, 'student_report.html', {
         'student': student, 
@@ -202,20 +205,39 @@ def student_report(request, student_id):
 def parent_portal(request):
     student = None
     assignments = None
+    videos = None
+    newsletters = None
     results = None
+    comments = None
     error = None
 
     if 'admission_number' in request.GET:
         adm_no = request.GET.get('admission_number')
         try:
-            # Try to find the student
             student = Student.objects.get(admission_number=adm_no)
             
-            # If found, get their assignments (based on Grade)
-            assignments = LearningResource.objects.filter(grade_class=student.grade_class).order_by('-uploaded_at')
+            # 1. Fetch Assignments
+            assignments = LearningResource.objects.filter(
+                grade_class=student.grade_class, 
+                resource_type='Assignment'
+            ).order_by('-uploaded_at')
+
+            # 2. Fetch Videos (New)
+            videos = LearningResource.objects.filter(
+                grade_class=student.grade_class, 
+                resource_type='Video'
+            ).order_by('-uploaded_at')
+
+            # 3. Fetch Newsletters (New)
+            newsletters = LearningResource.objects.filter(
+                resource_type='Newsletter'
+            ).order_by('-uploaded_at')
             
-            # Get their exam results
-            results = StudentResult.objects.filter(student=student).order_by('exam', 'subject')
+            # 4. Fetch Results (FIXED: Uses 'exam_name' instead of 'exam')
+            results = StudentResult.objects.filter(student=student).order_by('exam_name', 'subject')
+            
+            # 5. Fetch Comments
+            comments = ReportComment.objects.filter(student=student).order_by('-created_at')
             
         except Student.DoesNotExist:
             error = "Student not found. Please check the Admission Number."
@@ -223,7 +245,10 @@ def parent_portal(request):
     return render(request, 'parent_portal.html', {
         'student': student,
         'assignments': assignments,
+        'videos': videos,
+        'newsletters': newsletters,
         'results': results,
+        'comments': comments,
         'error': error
     })
 # --- SEND SMS ---

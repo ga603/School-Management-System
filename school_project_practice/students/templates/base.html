@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,8 +10,16 @@
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
     <style>
-        /* Custom Navy Blue for Kinari Primary */
+        /* --- GLOBAL STYLES --- */
+        body {
+            background-color: #f4f6f9; /* Softer grey for modern feel */
+            font-family: 'Poppins', sans-serif; /* Modern Font */
+        }
+
+        /* --- NAVY BLUE BRANDING --- */
         .bg-navy {
             background-color: #000080 !important;
         }
@@ -22,18 +31,41 @@
             background-color: #000050;
             color: white;
         }
-        body {
-            background-color: #f8f9fa;
+
+        /* --- HERO SECTION (For Home Page) --- */
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 128, 0.85), rgba(0, 0, 128, 0.75)), url('{% static "img/school_bg.jpg" %}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            padding: 100px 0;
+            margin-bottom: 40px;
+            border-radius: 0 0 50px 50px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
+
+        /* --- CARD HOVER EFFECTS --- */
         .card {
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: none; /* Cleaner look */
+            border-radius: 15px;
+        }
+        .hover-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .hover-card:hover {
+            transform: translateY(-10px); /* Lifts up */
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
         }
     </style>
 </head>
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-navy mb-4">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-navy mb-4 shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{% url 'home' %}">
                 <i class="fas fa-school"></i> ElimuTrack
@@ -70,11 +102,16 @@
                         </li>
                         
                         <li class="nav-item dropdown ms-lg-3">
-                            <a class="nav-link dropdown-toggle text-warning fw-bold" href="#" role="button" data-bs-toggle="dropdown">
+                            <a class="nav-link dropdown-toggle text-warning fw-bold" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Hi, {{ user.username }}
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <form action="{% url 'logout' %}" method="post" class="d-inline w-100">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item w-100">Logout</button>
+                                    </form>
+                                </li>
                             </ul>
                         </li>
                     {% else %}
@@ -93,10 +130,10 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container main-content">
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
@@ -107,10 +144,22 @@
         {% endblock %}
     </div>
 
-    <footer class="text-center text-muted py-4 mt-5 border-top">
+    <footer class="text-center text-muted py-4 mt-5 border-top bg-white">
         <p class="mb-0">&copy; 2025 <strong>ElimuTrack</strong>. Built for Kinari Primary School.</p>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6939573e422d341985557607/1jc3vpjml';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    </body>
 </html>

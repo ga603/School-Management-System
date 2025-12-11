@@ -1,45 +1,67 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <div class="card mt-5 shadow">
-            <div class="card-header bg-info text-white text-center">
-                <h3>Enter Marks</h3>
-                <p class="mb-0">Student: <strong>{{ student.first_name }} {{ student.last_name }}</strong></p>
-                <p class="small mb-0">Adm: {{ student.admission_number }}</p>
+        <div class="card shadow">
+            <div class="card-header bg-navy text-white">
+                <h4 class="mb-0">Enter Marks: {{ student.first_name }} {{ student.last_name }}</h4>
+                <small>Adm: {{ student.admission_number }}</small>
             </div>
             <div class="card-body">
                 <form method="POST">
                     {% csrf_token %}
                     
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Select Exam</label>
-                        {{ form.exam }} </div>
+                        <label class="form-label fw-bold">Exam Type</label>
+                        {{ form.exam_type }} 
+                        </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Select Subject</label>
-                        {{ form.subject }} </div>
+                        <label class="form-label fw-bold">Exam Name / Term</label>
+                        {{ form.exam_name }}
+                        <small class="text-muted">e.g. "Term 1 2025" or "Special Assessment"</small>
+                    </div>
+
                     <div class="mb-3">
-    <label class="form-label fw-bold">Performance Level (1-7)</label>
-    {{ form.performance_level }}
-    <small class="text-muted">Select based on KNEC CBC Guidelines.</small>
-                     </div>
+                        <label class="form-label fw-bold">Subject</label>
+                        {{ form.subject }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Performance Level (1-7)</label>
+                        {{ form.performance_level }}
+                        <div class="form-text text-muted">
+                            <strong>Key:</strong> 1-2 (Below Expectation), 3-4 (Approaching), 5 (Meeting), 6-7 (Exceeding)
+                        </div>
+                    </div>
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-info text-white">Save Result</button>
-                        <a href="{% url 'student_list' %}" class="btn btn-secondary">Back to List</a>
+                        <button type="submit" class="btn btn-navy">Save Result</button>
+                        <a href="{% url 'view_grade_students' student.grade_class %}" class="btn btn-secondary">Back to Class List</a>
                     </div>
                 </form>
             </div>
         </div>
+        
+        <div class="mt-4">
+            <h5 class="text-muted">Recent Entries for {{ student.first_name }}</h5>
+            <ul class="list-group">
+                {% for result in student.studentresult_set.all|slice:":5" %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ result.subject }}</strong> 
+                            <small class="text-muted">({{ result.exam_type }} - {{ result.exam_name }})</small>
+                        </div>
+                        <span class="badge bg-success rounded-pill">Level {{ result.performance_level }}</span>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted">No marks entered yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
     </div>
 </div>
-
-<script>
-    var inputs = document.querySelectorAll('select, input');
-    inputs.forEach(function(input) {
-        input.classList.add('form-control');
-    });
-</script>
 {% endblock %}

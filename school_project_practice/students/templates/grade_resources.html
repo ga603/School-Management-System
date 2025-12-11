@@ -1,51 +1,99 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="text-center mb-4">Assignments: {{ grade_name }}</h2>
-
-    <div class="card mb-4 shadow-sm border-primary">
-        <div class="card-header bg-primary text-white">
-            <h5>Upload New Assignment / Note</h5>
-        </div>
-        <div class="card-body">
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="form-label">Title (e.g., Math Homework Term 1)</label>
-                        <input type="text" name="title" class="form-control" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Select File (PDF/Word/Image)</label>
-                        <input type="file" name="file" class="form-control" required>
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-success w-100">Upload</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Manage Resources: {{ grade_name }}</h2>
+        <a href="{% url 'grade_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
     </div>
 
     <div class="row">
-        {% for resource in resources %}
-        <div class="col-md-6 mb-3">
-            <div class="card h-100">
-                <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="card-title">{{ resource.title }}</h5>
-                        <p class="card-text text-muted small">Uploaded: {{ resource.uploaded_at|date:"M d, Y" }}</p>
-                    </div>
-                    <a href="{{ resource.file.url }}" class="btn btn-outline-primary" target="_blank" download>Download</a>
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-navy text-white">
+                    <h5 class="mb-0">Upload New Material</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Title</label>
+                            {{ form.title.errors }}
+                            <input type="text" name="title" class="form-control" placeholder="e.g. Math Lesson 1 or Term 1 Newsletter" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Type</label>
+                            {{ form.resource_type }} 
+                            </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">File (PDF/Word)</label>
+                            <input type="file" name="file" class="form-control">
+                            <small class="text-muted">For Assignments & Newsletters</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Video Link (YouTube)</label>
+                            {{ form.video_link }} 
+                            <small class="text-muted">For Video Lessons only</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">Upload Resource</button>
+                    </form>
                 </div>
             </div>
         </div>
-        {% empty %}
-        <div class="col-12 text-center text-muted">
-            <p>No assignments uploaded yet for {{ grade_name }}.</p>
+
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Current Resources</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Title</th>
+                                <th>Link/File</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for resource in resources %}
+                            <tr>
+                                <td>
+                                    {% if resource.resource_type == 'Video' %}
+                                        <span class="badge bg-danger"><i class="fas fa-video"></i> Video</span>
+                                    {% elif resource.resource_type == 'Newsletter' %}
+                                        <span class="badge bg-warning text-dark"><i class="fas fa-newspaper"></i> News</span>
+                                    {% else %}
+                                        <span class="badge bg-primary"><i class="fas fa-file-alt"></i> Notes</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ resource.title }}</td>
+                                <td>
+                                    {% if resource.file %}
+                                        <a href="{{ resource.file.url }}" class="btn btn-sm btn-outline-primary" target="_blank">Download</a>
+                                    {% elif resource.video_link %}
+                                        <a href="{{ resource.video_link }}" class="btn btn-sm btn-outline-danger" target="_blank">Watch</a>
+                                    {% endif %}
+                                </td>
+                                <td>{{ resource.uploaded_at|date:"M d" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-4 text-muted">No resources uploaded yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        {% endfor %}
     </div>
 </div>
 {% endblock %}

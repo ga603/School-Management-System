@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="hero-section text-center" style="padding: 60px 0; border-radius: 0 0 50px 50px; margin-bottom: 40px;">
+    <div class="container">
+        <h1 class="display-4 fw-bold">About ElimuTrack</h1>
+        <p class="lead">Empowering Kinari Primary School with Digital Excellence.</p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6">
+            <h2 class="fw-bold text-primary mb-3">Our Mission</h2>
+            <p class="text-muted lead">
+                To provide a seamless, efficient, and transparent digital platform that enhances the educational experience for teachers, parents, and students at Kinari Primary School.
+            </p>
+            <p class="text-muted">
+                ElimuTrack bridges the gap between home and school, ensuring that every parent is informed, every fee is accounted for, and every student's progress is tracked accurately under the new CBC curriculum.
+            </p>
+        </div>
+        <div class="col-md-6 text-center">
+            <i class="fas fa-bullseye fa-10x text-warning opacity-25"></i>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card hover-card h-100 shadow-sm border-0 text-center p-4">
+                <div class="card-body">
+                    <i class="fas fa-history fa-3x text-info mb-3"></i>
+                    <h4 class="fw-bold">Our History</h4>
+                    <p class="text-muted">Founded in 2025, ElimuTrack was developed to solve the challenges of manual record-keeping and delayed communication.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card hover-card h-100 shadow-sm border-0 text-center p-4">
+                <div class="card-body">
+                    <i class="fas fa-lightbulb fa-3x text-success mb-3"></i>
+                    <h4 class="fw-bold">Innovation</h4>
+                    <p class="text-muted">We leverage modern technology like M-Pesa integration and SMS APIs to keep our school running smoothly.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card hover-card h-100 shadow-sm border-0 text-center p-4">
+                <div class="card-body">
+                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                    <h4 class="fw-bold">Community</h4>
+                    <p class="text-muted">Built specifically for the Kinari community, ensuring that our local education standards are world-class.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-center mt-5">
+        <a href="{% url 'contact' %}" class="btn btn-navy btn-lg rounded-pill px-5">Contact Us</a>
+    </div>
+</div>
+{% endblock %}

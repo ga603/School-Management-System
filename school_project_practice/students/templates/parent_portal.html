@@ -1,103 +1,176 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="card shadow-lg">
-        <div class="card-header bg-success text-white text-center">
-            <h2>Parent/Student Portal</h2>
-            <p>Enter Admission Number to access Assignments & Results</p>
-        </div>
-        <div class="card-body text-center">
-            <form method="GET" class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="input-group mb-3">
-                        <input type="text" name="admission_number" class="form-control form-control-lg" placeholder="e.g. 1021" required>
-                        <button class="btn btn-dark btn-lg" type="submit">Access Portal</button>
-                    </div>
-                </div>
-            </form>
+<div class="container py-5">
+    
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-primary">Parent & Student Portal</h1>
+        <p class="text-muted">Access results, watch lessons, and view school updates.</p>
+    </div>
 
-            {% if error %}
-                <div class="alert alert-danger">{{ error }}</div>
-            {% endif %}
+    {% if not student %}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <h3 class="card-title text-center mb-4">Student Login</h3>
+                    {% if error %}
+                        <div class="alert alert-danger">{{ error }}</div>
+                    {% endif %}
+                    
+                    <form method="GET" action="{% url 'parent_portal' %}">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Admission Number</label>
+                            <input type="text" name="admission_number" class="form-control form-control-lg" placeholder="e.g. 1021" required>
+                        </div>
+                        <button type="submit" class="btn btn-navy btn-lg w-100 rounded-pill">Access Portal</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 
-    {% if student %}
-    <div class="row mt-4">
-        <div class="col-md-4">
-            <div class="card shadow mb-4">
-                <div class="card-body text-center">
-                    {% if student.passport_photo %}
-                        <img src="{{ student.passport_photo.url }}" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
-                    {% endif %}
-                    <h4>{{ student.first_name }} {{ student.last_name }}</h4>
-                    <p class="badge bg-primary fs-6">{{ student.grade_class }}</p>
-                    <hr>
-                    <p><strong>Adm No:</strong> {{ student.admission_number }}</p>
-                </div>
-            </div>
-
-            <div class="card shadow border-success">
-                <div class="card-header bg-success text-white text-center">
-                    <h5 class="mb-0"><i class="fas fa-mobile-alt"></i> Pay School Fees</h5>
-                </div>
-                <div class="card-body text-center">
-                    <p>Pay fees instantly via M-Pesa.</p>
-                    <a href="{% url 'pay_fees' %}" class="btn btn-success w-100">
-                        Pay Now <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
+    {% else %}
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="card shadow border-0 text-center p-3">
+                {% if student.passport_photo %}
+                    <img src="{{ student.passport_photo.url }}" class="rounded-circle mx-auto d-block mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-light rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 120px; height: 120px;">
+                        <i class="fas fa-user-graduate fa-3x text-secondary"></i>
+                    </div>
+                {% endif %}
+                <h4 class="fw-bold">{{ student.first_name }} {{ student.last_name }}</h4>
+                <p class="text-muted mb-1">{{ student.admission_number }}</p>
+                <span class="badge bg-navy">{{ student.grade_class }}</span>
+                
+                <hr>
+                <a href="{% url 'pay_fees' %}" class="btn btn-success w-100 mb-2">
+                    <i class="fas fa-mobile-alt"></i> Pay Fees
+                </a>
+                <a href="{% url 'parent_portal' %}" class="btn btn-outline-secondary w-100">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
             </div>
         </div>
 
-        <div class="col-md-8">
-            <div class="card shadow mb-4">
-                <div class="card-header bg-info text-white">
-                    <h5>📚 Assignments & Notes</h5>
+        <div class="col-md-9">
+            <div class="card shadow border-0">
+                <div class="card-header bg-white">
+                    <ul class="nav nav-tabs card-header-tabs" id="portalTabs" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active" id="results-tab" data-bs-toggle="tab" data-bs-target="#results" type="button">📊 Results</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="videos-tab" data-bs-toggle="tab" data-bs-target="#videos" type="button">📺 Video Lessons</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="notes-tab" data-bs-toggle="tab" data-bs-target="#notes" type="button">📚 Assignments</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="news-tab" data-bs-toggle="tab" data-bs-target="#news" type="button">📢 Newsletter</button>
+                        </li>
+                    </ul>
                 </div>
+                
                 <div class="card-body">
-                    {% if assignments %}
-                        <ul class="list-group">
-                            {% for resource in assignments %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>{{ resource.title }}</strong>
-                                    <br><small class="text-muted">{{ resource.uploaded_at|date:"M d, Y" }}</small>
-                                </div>
-                                <a href="{{ resource.file.url }}" class="btn btn-sm btn-outline-primary" download>Download</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-                        <p class="text-muted">No assignments uploaded for this class yet.</p>
-                    {% endif %}
-                </div>
-            </div>
+                    <div class="tab-content" id="portalTabsContent">
+                        
+                        <div class="tab-pane fade show active" id="results">
+                            <h5 class="text-primary mb-3">Academic Report</h5>
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Exam</th>
+                                        <th>Type</th>
+                                        <th>Subject</th>
+                                        <th>Level</th>
+                                        <th>Grade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for res in results %}
+                                    <tr>
+                                        <td>{{ res.exam_name }}</td>
+                                        <td>{{ res.exam_type }}</td>
+                                        <td>{{ res.subject.name }}</td>
+                                        <td class="fw-bold">{{ res.performance_level }}</td>
+                                        <td>{{ res.short_grade }}</td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr><td colspan="5">No results found.</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
 
-            <div class="card shadow">
-                <div class="card-header bg-warning text-dark">
-                    <h5>🏆 Assessment Results</h5>
-                </div>
-                <div class="card-body">
-                    {% if results %}
-                        <table class="table table-bordered table-sm">
-                            <thead>
-                                <tr><th>Subject</th><th>Level</th><th>Grade</th></tr>
-                            </thead>
-                            <tbody>
-                                {% for res in results %}
-                                <tr>
-                                    <td>{{ res.subject }}</td>
-                                    <td>{{ res.performance_level }}</td>
-                                    <td>{{ res.short_grade }}</td>
-                                </tr>
+                            {% if comments %}
+                                <div class="mt-4">
+                                    <h6 class="text-success">Class Teacher Remarks</h6>
+                                    {% for comm in comments %}
+                                        <div class="alert alert-light border border-success">
+                                            <strong>{{ comm.exam_name }}:</strong> {{ comm.teacher_comment }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="tab-pane fade" id="videos">
+                            <h5 class="text-danger mb-3">Watch Lessons</h5>
+                            <div class="row">
+                                {% for vid in videos %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h6 class="fw-bold">{{ vid.title }}</h6>
+                                            <p class="small text-muted">{{ vid.uploaded_at|date:"M d, Y" }}</p>
+                                            <a href="{{ vid.video_link }}" target="_blank" class="btn btn-outline-danger btn-sm w-100">
+                                                <i class="fab fa-youtube"></i> Watch on YouTube
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <p class="text-muted">No video lessons uploaded yet.</p>
                                 {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <p class="text-muted">No results found.</p>
-                    {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="notes">
+                            <h5 class="text-primary mb-3">Download Notes</h5>
+                            <ul class="list-group">
+                                {% for note in assignments %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ note.title }}</strong><br>
+                                        <small class="text-muted">{{ note.uploaded_at|date:"M d, Y" }}</small>
+                                    </div>
+                                    <a href="{{ note.file.url }}" class="btn btn-sm btn-primary" download>Download</a>
+                                </li>
+                                {% empty %}
+                                <p class="text-muted">No assignments available.</p>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        <div class="tab-pane fade" id="news">
+                            <h5 class="text-warning text-dark mb-3">School Updates</h5>
+                            {% for news in newsletters %}
+                                <div class="alert alert-warning d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong><i class="fas fa-bullhorn"></i> {{ news.title }}</strong>
+                                        <div class="small">{{ news.uploaded_at|date:"M d, Y" }}</div>
+                                    </div>
+                                    <a href="{{ news.file.url }}" class="btn btn-sm btn-dark" target="_blank">Read</a>
+                                </div>
+                            {% empty %}
+                                <p class="text-muted">No recent newsletters.</p>
+                            {% endfor %}
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
